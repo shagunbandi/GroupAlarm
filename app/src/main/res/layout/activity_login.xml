@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.justapp.groupalarm.LoginActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
+
+        <EditText
+            android:id="@+id/LEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_margin="20dp"
+            android:hint="@string/regEmail"
+            android:inputType="textEmailAddress"/>
+
+        <EditText
+            android:id="@+id/LPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/LEmail"
+            android:layout_margin="20dp"
+            android:hint="@string/regPassword"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/LButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/LPassword"
+            android:layout_margin="20dp"
+            android:text="@string/regSubmit" />
+
+        <TextView
+            android:id="@+id/LMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/LButton"
+            android:layout_centerHorizontal="true"
+            android:text="@string/register_here" />
+
+        <TextView
+            android:id="@+id/LMessageNoLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/LMessage"
+            android:layout_centerHorizontal="true"
+            android:text="@string/no_login" />
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

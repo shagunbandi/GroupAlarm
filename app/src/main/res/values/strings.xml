@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Group Alarm</string>
+    <string name="regName">Name</string>
+    <string name="regEmail">Email</string>
+    <string name="regSubmit">Submit</string>
+    <string name="regPassword">Password</string>
+    <string name="register_here">Register Here</string>
+    <string name="no_login">No Login</string>
+    <string name="set_alarm">Alarm On</string>
+    <string name="delete_alarm">Alarm off</string>
+    <string name="alarm_status">Alarm Status</string>
+</resources>
