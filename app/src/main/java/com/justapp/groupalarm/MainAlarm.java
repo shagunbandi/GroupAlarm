@@ -59,6 +59,9 @@ public class MainAlarm extends AppCompatActivity {
 
                         set_alarm_status("Alarm is set at - " + hour + ":" + min);
 
+                        alarm_receiver.putExtra("extra", true);
+
+
                         //Create Intent till specified time
                         pendingIntent = PendingIntent.getBroadcast(
                                 MainAlarm.this,
@@ -81,6 +84,9 @@ public class MainAlarm extends AppCompatActivity {
                         set_alarm_status("Alarm is Off");
                         alarmManager.cancel(pendingIntent);
 
+                        alarm_receiver.putExtra("extra", false);
+
+                        sendBroadcast(alarm_receiver);
                     }
                 }
         );

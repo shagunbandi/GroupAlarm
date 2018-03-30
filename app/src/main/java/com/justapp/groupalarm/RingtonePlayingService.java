@@ -15,6 +15,9 @@ import android.widget.Toast;
 public class RingtonePlayingService extends Service {
 
     MediaPlayer media_song;
+    boolean stateId;
+    boolean isRunning;
+    final String TAG = "SHAGUN";
 
     @Nullable
     @Override
@@ -25,16 +28,59 @@ public class RingtonePlayingService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Log.i("SHAGUN", "Ringtone Service Started");
+        Log.i(TAG, "Ringtone Service Started");
 
-        media_song = MediaPlayer.create(this, R.raw.sunny);
-        media_song.start();
+        Boolean state = intent.getExtras().getBoolean("extra");
+
+        Log.i(TAG, "stateId :" + this.stateId);
+
+        if (state)
+            this.stateId = true;
+        else
+            this.stateId = false;
+
+
+        if(!this.isRunning && stateId){
+
+            media_song = MediaPlayer.create(this, R.raw.sunny);
+            media_song.start();
+            Log.i(TAG, "No Music, and want on");
+            this.isRunning = true;
+            this.stateId = false;
+        }
+        else if (this.isRunning && !stateId){
+            Log.i(TAG, "Music, and want off");
+            media_song.stop();
+            media_song.reset();
+
+            this.isRunning = false;
+            this.stateId = false;
+        }
+        else if (!this.isRunning && !stateId){
+            Log.i(TAG, "No Music, and want off");
+            this.isRunning = false;
+            this.stateId = false;
+
+        }
+        else if (this.isRunning && stateId){
+            Log.i(TAG, "Music, and want on");
+
+            this.isRunning = true;
+            this.stateId = true;
+
+        }
+
+        Log.i(TAG, "Request Complete");
 
         return START_NOT_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        Toast.makeText(this, "On Destrouy Called", Toast.LENGTH_LONG).show();
+
+        Log.i(TAG, "On Destroy Called");
+        super.onDestroy();
+        this.isRunning = false;
+
     }
 }
