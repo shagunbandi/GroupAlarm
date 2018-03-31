@@ -11,8 +11,10 @@
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <TimePicker
             android:id="@+id/myTimePicker"
@@ -50,9 +52,67 @@
             android:id="@+id/alarmStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/stop_alarm"
+            android:layout_alignBottom="@+id/stop_alarm"
+            android:layout_alignTop="@+id/stop_alarm"
             android:layout_centerHorizontal="true"
-            android:text="@string/alarm_status" />
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/alarm_is_off" />
+
+        <EditText
+            android:id="@+id/labelText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignStart="@+id/start_alarm"
+            android:layout_below="@+id/alarmStatus"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="@string/label"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/infoText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignStart="@+id/start_alarm"
+            android:layout_below="@+id/labelText"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            android:ems="10"
+            android:hint="@string/info"
+            android:inputType="textPersonName" />
+
+        <View
+            android:id="@+id/anchor"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_alignBottom="@+id/saveButton"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp" />
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/delButton"
+            android:layout_alignBottom="@+id/delButton"
+            android:layout_alignStart="@+id/infoText"
+            android:layout_marginHorizontal="20dp"
+            android:layout_toStartOf="@id/anchor"
+            android:text="@string/save" />
+
+        <Button
+            android:id="@+id/delButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/infoText"
+            android:layout_below="@+id/infoText"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@id/anchor"
+            android:text="@string/delete" />
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

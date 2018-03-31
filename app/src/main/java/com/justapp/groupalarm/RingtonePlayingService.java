@@ -9,11 +9,14 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.IBinder;
+import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationBuilderWithBuilderAccessor;
 import android.support.v4.app.NotificationCompat;
+import android.text.Layout;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.widget.Toast;
 
 /**
@@ -43,6 +46,10 @@ public class RingtonePlayingService extends Service {
         // Checks if music is Running or Not and what is Requested and acts accordingly
         set_media_on_off();
 
+        LayoutInflater myInflator = LayoutInflater.from(getBaseContext());
+
+
+
         return START_NOT_STICKY;
     }
 
@@ -60,6 +67,7 @@ public class RingtonePlayingService extends Service {
 
             media_song = MediaPlayer.create(this, R.raw.sunny);
             media_song.start();
+            media_song.setLooping(true);
             Log.i(TAG, "No Music, and want on");
             this.isRunning = true;
             this.stateId = false;

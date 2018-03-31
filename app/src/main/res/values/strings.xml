@@ -9,4 +9,9 @@
     <string name="set_alarm">Alarm On</string>
     <string name="delete_alarm">Alarm off</string>
     <string name="alarm_status">Alarm Status</string>
+    <string name="label">Label</string>
+    <string name="info">Info</string>
+    <string name="save">Save</string>
+    <string name="alarm_is_off">Alarm is Off</string>
+    <string name="delete">Delete</string>
 </resources>
