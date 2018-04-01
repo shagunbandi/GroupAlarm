@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     Button Lbutton;
     TextView message;
     TextView messageNoLogin;
-    String URL_POST = "http://0003fcaf.ngrok.io/api/accounts/login/";
+    String URL_POST = "http://ff2da018.ngrok.io/api/accounts/login/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

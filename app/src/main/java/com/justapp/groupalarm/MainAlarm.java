@@ -92,7 +92,8 @@ public class MainAlarm extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        save_data_from_view_to_alarmDB();
+                        stop_alarm.performClick();
+                        start_alarm.performClick();
                         back_to_main_alarm_intent();
                     }
                 }
@@ -115,31 +116,38 @@ public class MainAlarm extends AppCompatActivity {
                         // Set this to Calender
                         calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
                         calendar.set(Calendar.MINUTE, timePicker.getMinute());
+                        calendar.set(Calendar.SECOND, 0);
+                        calendar.set(Calendar.MILLISECOND, 0);
 
                         // Log the results
                         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss:S");
-                        String result = sdf.format(Calendar.getInstance().getTime());
-                        Log.i(TAG, "Current:  " + result);
-                        Log.i(TAG, "Play at:  " + hour + ":" + min);
+                        String current = sdf.format(Calendar.getInstance().getTime());
+                        String alarm_at = sdf.format(calendar.getTimeInMillis());
+                        Log.i(TAG, "Current:  " + current);
+                        Log.i(TAG, "Play at:  " + alarm_at);
 
                         // Update Status
                         set_alarm_status("Alarm is set at - " + hour + ":" + min);
 
-                        // Pass info to alarm_reveiver
-                        alarm_receiver.putExtra("extra", true);
-
                         // Save Alarm
+//                        String curr_label = labelText.getText().toString();
                         save_data_from_view_to_alarmDB();
+                        labelName = labelText.getText().toString();
+
+//                        dbManager.update_alarm(alarm, curr_label);
 
                         // Update te variable
                         is_alarm_update = true;
 
-                        // Make Unique Alarm Receiver
+                        // Pass info to alarm_reveiver
+                        alarm_receiver.putExtra("extra", true);
+                        alarm_receiver.putExtra("label", labelName);
+
                         alarm_receiver.setAction(String.valueOf(alarm.get_id()));
                         alarm_receiver.setData(Uri.parse(String.valueOf(alarm.get_id())));
                         pendingIntent = PendingIntent.getBroadcast(
                                 MainAlarm.this,
-                                0, alarm_receiver,
+                                alarm.get_id(), alarm_receiver,
                                 PendingIntent.FLAG_UPDATE_CURRENT
                         );
 
@@ -162,37 +170,16 @@ public class MainAlarm extends AppCompatActivity {
 
                         set_alarm_status("Alarm is Off");
 
-//                        if(pendingIntent != null) {
-//                            Log.i(TAG, "Pending Intent not null");
-//                            alarmManager.cancel(pendingIntent);
-//                            Log.i(TAG, "cancelling Pending Request");
-//                            alarm_receiver.putExtra("extra", false);
-//
-//                            sendBroadcast(alarm_receiver);
-//                            Log.i(TAG, "Broadcast Sent");
-//                        }
-                        
                         alarm_receiver.setAction(String.valueOf(alarm.get_id()));
                         alarm_receiver.setData(Uri.parse(String.valueOf(alarm.get_id())));
                         pendingIntent = PendingIntent.getBroadcast(
                                 MainAlarm.this,
-                                0, alarm_receiver,
+                                alarm.get_id(), alarm_receiver,
                                 PendingIntent.FLAG_UPDATE_CURRENT
                         );
                         alarmManager.cancel(pendingIntent);
 
                         alarm_status_current = false;
-
-                        Intent stop_service = new Intent(MainAlarm.this, RingtonePlayingService.class);
-                        stop_service.setAction(String.valueOf(alarm.get_id()));
-                        stop_service.setData(Uri.parse(String.valueOf(alarm.get_id())));
-                        stopService(stop_service);
-
-                        stop_service = new Intent(MainAlarm.this, RingtonePlayingService.class);
-                        stopService(stop_service);
-
-
-
                     }
                 }
         );
@@ -217,6 +204,7 @@ public class MainAlarm extends AppCompatActivity {
         alarm_status_current = false;
         id = -1;
         alarm_receiver = new Intent(this.context, AlarmReceiver.class);
+        labelName = "";
 
         alarmStatus = (TextView) findViewById(R.id.alarmStatus);
         saveButton = (Button) findViewById(R.id.saveButton);
@@ -271,8 +259,10 @@ public class MainAlarm extends AppCompatActivity {
         String hour = alarm.get_hour();
 
         if (!hour.equals("") && !min.equals("")){
-            timePicker.setHour(Integer.parseInt(hour));
-            timePicker.setMinute(Integer.parseInt(min));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                timePicker.setHour(Integer.parseInt(hour));
+                timePicker.setMinute(Integer.parseInt(min));
+            }
         }
 
         Log.i(TAG, "Main Activity populated");
@@ -285,17 +275,21 @@ public class MainAlarm extends AppCompatActivity {
     private void save_data_from_view_to_alarmDB(){
         alarm.set_info(infoText.getText().toString());
         alarm.set_label(labelText.getText().toString());
-        alarm.set_hour(String.valueOf(timePicker.getHour()));
-        alarm.set_min(String.valueOf(timePicker.getMinute()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarm.set_hour(String.valueOf(timePicker.getHour()));
+            alarm.set_min(String.valueOf(timePicker.getMinute()));
+        }
         alarm.set_alarm_status(alarm_status_current);
 
         // Update if already there else add new row
         if(MainAlarm.this.is_alarm_update) {
             dbManager.update_alarm(alarm, labelName);
-            labelName = alarm.get_label();
+            labelName = labelText.getText().toString();
         }
         else
             dbManager.add_alarm(alarm);
+
+        is_alarm_update = true;
 
         Log.i(TAG, "Alarm Saved to DB");
     }

@@ -25,10 +25,20 @@ tools:context="com.justapp.groupalarm.ListActivity">
 
         </ListView>
 
+        <TextView
+            android:id="@+id/welcomeText"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center_horizontal|center"
+            android:text="Welcome !!"
+            android:textSize="18sp" />
+
         <Button
             android:id="@+id/addButton"
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/welcomeText"
             android:text="Add Alarms" />
 
         <Button

@@ -27,8 +27,17 @@ public class ListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
+        // Initialize Buttons
         addButton = (Button) findViewById(R.id.addButton);
         stopButton = (Button) findViewById(R.id.stopButton);
+
+        dbManager = new AlarmDBManager(this, null, null, 1);
+
+        //Set List Values
+        String[] labelArr = dbManager.get_all_labels();
+        ListAdapter myAdapter = new CustomAdapter(this, labelArr);
+        ListView myList = (ListView) findViewById(R.id.myList);
+        myList.setAdapter(myAdapter);
 
         addButton.setOnClickListener(
                 new View.OnClickListener() {
@@ -39,25 +48,14 @@ public class ListActivity extends Activity {
                     }
                 }
         );
-
-//        stopButton.setOnClickListener(
-//                new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Intent stop_service = new Intent(ListActivity.this, RingtonePlayingService.class);
-//                        stopService(stop_service);
-//                    }
-//                }
-//        );
-
-
-        dbManager = new AlarmDBManager(this, null, null, 1);
-        String[] labelArr = dbManager.get_all_labels();
-
-        ListAdapter myAdapter = new CustomAdapter(this, labelArr);
-        ListView myList = (ListView) findViewById(R.id.myList);
-        myList.setAdapter(myAdapter);
-
+        stopButton.setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        stopService(new Intent(getBaseContext(), RingtonePlayingService.class));
+                    }
+                }
+        );
 
         myList.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {

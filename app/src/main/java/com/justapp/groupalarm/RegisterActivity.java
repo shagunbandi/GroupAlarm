@@ -30,7 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText etPassword;
     Button Rbutton;
     String message;
-    String URL_POST = "http://0003fcaf.ngrok.io/api/accounts/register/";
+    String URL_POST = "http://ff2da018.ngrok.io/api/accounts/register/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
