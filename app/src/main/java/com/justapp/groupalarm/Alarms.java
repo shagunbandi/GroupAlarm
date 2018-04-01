@@ -1,5 +1,11 @@
 package com.justapp.groupalarm;
 
+import android.util.Log;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by shagunbandi on 30/03/18.
  */
@@ -9,23 +15,18 @@ public class Alarms {
     private int _id;
     private String _label;
     private String _info;
-    private String _hour;
-    private String _min;
-    private long _timeinmillis;
     private boolean _alarm_status;
+    private long _timeinmillis;
 
 
     public Alarms() {
         _label = "";
         _info = "";
-        _hour=  "";
-        _min = "";
         _alarm_status = false;
+        _timeinmillis = Calendar.getInstance().getTimeInMillis();
     }
 
     //Setters
-
-
     public void set_id(int _id) {
         this._id = _id;
     }
@@ -36,14 +37,6 @@ public class Alarms {
 
     public void set_info(String _info) {
         this._info = _info;
-    }
-
-    public void set_hour(String _hour) {
-        this._hour = _hour;
-    }
-
-    public void set_min(String _min) {
-        this._min = _min;
     }
 
     public void set_timeinmillis(long _timeinmillis) {
@@ -67,14 +60,6 @@ public class Alarms {
         return _info;
     }
 
-    public String get_hour() {
-        return _hour;
-    }
-
-    public String get_min() {
-        return _min;
-    }
-
     public long get_timeinmillis() {
         return _timeinmillis;
     }
@@ -83,5 +68,24 @@ public class Alarms {
         return _alarm_status;
     }
 
+    //Other Functions
+    public int get_hour() {
+        return (int) (TimeUnit.MILLISECONDS.toHours(_timeinmillis) % 24);
+    }
 
+    public int get_min() {
+        return (int) (TimeUnit.MILLISECONDS.toMinutes(_timeinmillis) % 60);
+    }
+
+    public String get_time_AMPM(){
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
+        return sdf.format(_timeinmillis);
+    }
+
+    public String get_OnOff() {
+        if (_alarm_status)
+            return "On";
+        else
+            return "Off";
+    }
 }

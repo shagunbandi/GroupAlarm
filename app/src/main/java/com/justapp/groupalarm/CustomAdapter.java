@@ -61,18 +61,10 @@ class CustomAdapter extends ArrayAdapter<Alarms>{
         alarmLabel.setText(singleAlarm.get_label());
 
         // Set Time
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        long time = singleAlarm.get_timeinmillis();
-        String alarm_at = sdf.format(time);
-        alarmTime.setText(alarm_at);
+        alarmTime.setText(singleAlarm.get_time_AMPM());
 
         // Set Status
-        boolean status = singleAlarm.get_alarm_status();
-        if (status)
-            alarmStatus.setText("On");
-        else
-            alarmStatus.setText("Off");
-
+        alarmStatus.setText(singleAlarm.get_OnOff());
         return customView;
     }
 }

@@ -21,11 +21,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-import static com.justapp.groupalarm.AlarmDBManager.COLUMN_HOUR;
 import static com.justapp.groupalarm.AlarmDBManager.COLUMN_ID;
 import static com.justapp.groupalarm.AlarmDBManager.COLUMN_INFO;
 import static com.justapp.groupalarm.AlarmDBManager.COLUMN_LABEL;
-import static com.justapp.groupalarm.AlarmDBManager.COLUMN_MIN;
 import static com.justapp.groupalarm.AlarmDBManager.COLUMN_STATUS;
 
 public class MainAlarm extends AppCompatActivity {
@@ -121,10 +119,7 @@ public class MainAlarm extends AppCompatActivity {
                         Log.i(TAG, "start clicked");
 
                         // Set this to Calender
-                        calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
-                        calendar.set(Calendar.MINUTE, timePicker.getMinute());
-                        calendar.set(Calendar.SECOND, 0);
-                        calendar.set(Calendar.MILLISECOND, 0);
+                        set_value_to_calender();
 
                         // Get current time
                         Calendar currentTime = Calendar.getInstance();
@@ -202,6 +197,15 @@ public class MainAlarm extends AppCompatActivity {
 
     }
 
+    private void set_value_to_calender() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
+            calendar.set(Calendar.MINUTE, timePicker.getMinute());
+        }
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+    }
+
     private void back_to_main_alarm_intent() {
         Intent all_alarm_intent = new Intent(MainAlarm.this, ListActivity.class);
         MainAlarm.this.startActivity(all_alarm_intent);
@@ -239,6 +243,7 @@ public class MainAlarm extends AppCompatActivity {
         if(listActivityData!=null) {
             labelName = listActivityData.getString("LabelName");
             alarm = dbManager.get_alarm_with_label(labelName);
+
             is_alarm_update = true;
         }
 
@@ -262,16 +267,14 @@ public class MainAlarm extends AppCompatActivity {
         }
 
         // timepicker
-        String min = alarm.get_min();
-        String hour = alarm.get_hour();
+        long time_millis = alarm.get_timeinmillis();
+        int min = alarm.get_min();
+        int hour = alarm.get_hour();
 
-        if (!hour.equals("") && !min.equals("")){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                timePicker.setHour(Integer.parseInt(hour));
-                timePicker.setMinute(Integer.parseInt(min));
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            timePicker.setHour(hour);
+            timePicker.setMinute(min);
         }
-
         Log.i(TAG, "Main Activity populated");
     }
 
@@ -280,13 +283,15 @@ public class MainAlarm extends AppCompatActivity {
     }
 
     private void save_data_from_view_to_alarmDB(){
+
+//        TODO calender ko call karna warna shia ni aayega
+
         alarm.set_info(infoText.getText().toString());
         alarm.set_label(labelText.getText().toString());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarm.set_hour(String.valueOf(timePicker.getHour()));
-            alarm.set_min(String.valueOf(timePicker.getMinute()));
-        }
         alarm.set_alarm_status(alarm_status_current);
+
+        // Update calender from timepicker
+        set_value_to_calender();
         alarm.set_timeinmillis(calendar.getTimeInMillis());
 
         // Update if already there else add new row
