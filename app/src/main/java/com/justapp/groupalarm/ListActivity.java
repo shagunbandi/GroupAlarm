@@ -31,11 +31,14 @@ public class ListActivity extends Activity {
         addButton = (Button) findViewById(R.id.addButton);
         stopButton = (Button) findViewById(R.id.stopButton);
 
+        // Initialize dbManager
         dbManager = new AlarmDBManager(this, null, null, 1);
 
         //Set List Values
-        String[] labelArr = dbManager.get_all_labels();
-        ListAdapter myAdapter = new CustomAdapter(this, labelArr);
+        Alarms[] alarmArr = dbManager.get_all_alarms();
+        ListAdapter myAdapter = new CustomAdapter(this, alarmArr);
+
+        // Initialize the List
         ListView myList = (ListView) findViewById(R.id.myList);
         myList.setAdapter(myAdapter);
 
@@ -61,12 +64,10 @@ public class ListActivity extends Activity {
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        String alarm_label = String.valueOf(parent.getItemAtPosition(position));
-//                        Toast.makeText(ListActivity.this, alarm_label, Toast.LENGTH_LONG).show();
-//                        TODO Switch to Main Alarm
+                        Alarms alarm = (Alarms) parent.getItemAtPosition(position);
 
                         Intent alarm_detail_intent = new Intent(ListActivity.this, MainAlarm.class);
-                        alarm_detail_intent.putExtra("LabelName", alarm_label);
+                        alarm_detail_intent.putExtra("LabelName", alarm.get_label());
                         ListActivity.this.startActivity(alarm_detail_intent);
 
                     }

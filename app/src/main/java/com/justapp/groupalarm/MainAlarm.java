@@ -19,6 +19,7 @@ import android.widget.TimePicker;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import static com.justapp.groupalarm.AlarmDBManager.COLUMN_HOUR;
 import static com.justapp.groupalarm.AlarmDBManager.COLUMN_ID;
@@ -92,8 +93,17 @@ public class MainAlarm extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        stop_alarm.performClick();
-                        start_alarm.performClick();
+                        Log.i(TAG, "" + alarm_status_current);
+                        if(alarm_status_current){
+                            // Stop the previously sent pendingIntent and start a new Intent with updated values
+                            Log.i(TAG, "" + alarm_status_current);
+                            stop_alarm.performClick();
+                            Log.i(TAG, "" + alarm_status_current);
+                            start_alarm.performClick();
+                            Log.i(TAG, "" + alarm_status_current);
+                        }
+                        else
+                            save_data_from_view_to_alarmDB();
                         back_to_main_alarm_intent();
                     }
                 }
@@ -106,12 +116,9 @@ public class MainAlarm extends AppCompatActivity {
                     @TargetApi(Build.VERSION_CODES.M)
                     @Override
                     public void onClick(View v) {
+                        alarm_status_current = true;
 
                         Log.i(TAG, "start clicked");
-
-                        // Get Hour and Min from timepicker
-                        String hour = String.valueOf(timePicker.getHour());
-                        String min = String.valueOf(timePicker.getMinute());
 
                         // Set this to Calender
                         calendar.set(Calendar.HOUR_OF_DAY, timePicker.getHour());
@@ -119,22 +126,31 @@ public class MainAlarm extends AppCompatActivity {
                         calendar.set(Calendar.SECOND, 0);
                         calendar.set(Calendar.MILLISECOND, 0);
 
-                        // Log the results
+                        // Get current time
+                        Calendar currentTime = Calendar.getInstance();
+
+//                        long time_in_millis = calendar.getTimeInMillis();
+
+                        // if scheduled time is before currentTime add one Day
+                        if(calendar.compareTo(currentTime) < 0){
+//                            time_in_millis += TimeUnit.DAYS.toMillis(1);
+                            calendar.add(Calendar.DATE, 1);
+                        }
+
                         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss:S");
-                        String current = sdf.format(Calendar.getInstance().getTime());
+
+                        String current = sdf.format(currentTime.getTime());
                         String alarm_at = sdf.format(calendar.getTimeInMillis());
+
                         Log.i(TAG, "Current:  " + current);
                         Log.i(TAG, "Play at:  " + alarm_at);
 
                         // Update Status
-                        set_alarm_status("Alarm is set at - " + hour + ":" + min);
+                        set_alarm_status("Alarm is set at - " + timePicker.getHour() + ":" + timePicker.getMinute());
 
                         // Save Alarm
-//                        String curr_label = labelText.getText().toString();
                         save_data_from_view_to_alarmDB();
                         labelName = labelText.getText().toString();
-
-//                        dbManager.update_alarm(alarm, curr_label);
 
                         // Update te variable
                         is_alarm_update = true;
@@ -152,9 +168,8 @@ public class MainAlarm extends AppCompatActivity {
                         );
 
 
-                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-                        alarm_status_current = true;
 
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                     }
                 }
         );
@@ -166,6 +181,8 @@ public class MainAlarm extends AppCompatActivity {
                     @TargetApi(Build.VERSION_CODES.M)
                     @Override
                     public void onClick(View v) {
+                        alarm_status_current = false;
+
                         Log.i(TAG, "Stop clicked");
 
                         set_alarm_status("Alarm is Off");
@@ -179,7 +196,6 @@ public class MainAlarm extends AppCompatActivity {
                         );
                         alarmManager.cancel(pendingIntent);
 
-                        alarm_status_current = false;
                     }
                 }
         );
@@ -218,20 +234,11 @@ public class MainAlarm extends AppCompatActivity {
 
     }
 
-
     public void initialize_alarm() {
         Bundle listActivityData = getIntent().getExtras();
         if(listActivityData!=null) {
             labelName = listActivityData.getString("LabelName");
-            HashMap<String, Object> map = dbManager.get_row_with_label(labelName);
-
-            alarm.set_info((String) map.get(COLUMN_INFO));
-            alarm.set_label((String) map.get(COLUMN_LABEL));
-            alarm.set_id((int) map.get(COLUMN_ID));
-            alarm.set_min((String) map.get(COLUMN_MIN));
-            alarm.set_hour((String) map.get(COLUMN_HOUR));
-            alarm.set_alarm_status((Boolean) map.get(COLUMN_STATUS));
-
+            alarm = dbManager.get_alarm_with_label(labelName);
             is_alarm_update = true;
         }
 
@@ -280,6 +287,7 @@ public class MainAlarm extends AppCompatActivity {
             alarm.set_min(String.valueOf(timePicker.getMinute()));
         }
         alarm.set_alarm_status(alarm_status_current);
+        alarm.set_timeinmillis(calendar.getTimeInMillis());
 
         // Update if already there else add new row
         if(MainAlarm.this.is_alarm_update) {

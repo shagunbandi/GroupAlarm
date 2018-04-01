@@ -9,10 +9,10 @@
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_margin="5dp"
-            android:paddingLeft="10dp"
+            android:paddingStart="10dp"
             android:layout_weight="1"
             android:gravity="start|fill_vertical"
-            android:text="Alarm Info" />
+            android:text="Alarm Info"/>
 
         <!--<Switch-->
             <!--android:id="@+id/Switch"-->
@@ -20,4 +20,23 @@
             <!--android:layout_height="wrap_content"-->
             <!--android:layout_margin="10dp"-->
             <!--android:layout_weight="0" />-->
+
+        <TextView
+            android:id="@+id/TVTime"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="0"
+            android:gravity="center_vertical"
+            android:text="Time" />
+
+
+        <TextView
+            android:id="@+id/TVStatus"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="0"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="Status" />
 </LinearLayout>
